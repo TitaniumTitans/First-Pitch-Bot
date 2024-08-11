@@ -9,11 +9,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Launcher;
 
 
 public class RobotContainer {
     CommandXboxController m_controller = new CommandXboxController(0);
     Drivetrain m_drivetrain = new Drivetrain();
+    Launcher m_launcher = new Launcher();
     public RobotContainer()
     {
         configureBindings();
@@ -24,6 +26,7 @@ public class RobotContainer {
         m_drivetrain.setDefaultCommand(
                 m_drivetrain.Drive(m_controller)
         );
+        m_controller.a().onTrue(m_launcher.Shoot(true));
     }
     
     
