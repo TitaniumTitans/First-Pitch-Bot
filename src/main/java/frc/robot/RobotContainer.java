@@ -26,7 +26,7 @@ public class RobotContainer {
         m_drivetrain.setDefaultCommand(
                 m_drivetrain.Drive(m_controller)
         );
-        m_controller.a().onTrue(m_launcher.Shoot(true));
+        m_controller.a().whileTrue(m_launcher.Shoot(true));
     }
     
     
