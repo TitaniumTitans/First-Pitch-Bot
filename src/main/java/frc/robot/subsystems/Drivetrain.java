@@ -26,7 +26,7 @@ public class Drivetrain extends SubsystemBase {
         m_diffDrive.arcadeDrive(xAxisSpeed, zAxisRotate);
     }
     public Command Drive(CommandXboxController controller) {
-        return runEnd(() -> arcadeDrive(controller.getLeftY(), controller.getRightX()),
+        return runEnd(() -> arcadeDrive(-controller.getLeftY(), controller.getRightX()),
                 () -> arcadeDrive(0.0,0.0));
     }
 }
