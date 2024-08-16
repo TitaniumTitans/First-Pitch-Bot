@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.Pivot;
@@ -29,6 +30,13 @@ public class RobotContainer {
     
     
     private void configureBindings() {
+        Trigger shotTrigger = m_controller.start()
+                .and(m_controller.button(7))
+                .and(m_controller.a())
+                .and(m_controller.b())
+                .and(m_controller.x())
+                .and(m_controller.y());
+
         m_drivetrain.setDefaultCommand(
                 m_drivetrain.Drive(
                         () -> MathUtil.applyDeadband(m_controller.getLeftY(), 0.1),
@@ -36,7 +44,7 @@ public class RobotContainer {
                 )
         );
 
-//        m_controller.a().whileTrue(m_launcher.Shoot());
+        m_controller.x().whileTrue(m_launcher.Shoot());
 
         m_controller.a().whileTrue(m_launcher.openChamberValve());
         m_controller.b().whileTrue(m_launcher.openShotValve());

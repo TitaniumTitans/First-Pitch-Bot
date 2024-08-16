@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Launcher extends SubsystemBase {
-    private final Solenoid m_release = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
-    private final Solenoid m_chamber = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
+    private final Solenoid m_release = new Solenoid(6, PneumaticsModuleType.CTREPCM, 0);
+    private final Solenoid m_chamber = new Solenoid(6, PneumaticsModuleType.CTREPCM, 1);
     private final DigitalOutput m_ledIndicator = new DigitalOutput(0);
 
     private final AnalogInput m_pressureInpt = new AnalogInput(0);
@@ -20,7 +21,8 @@ public class Launcher extends SubsystemBase {
 
   @Override
   public void periodic() {
-    pressure = ((m_pressureInpt.getVoltage() - 0.5) / 4.0) * 200.0;
+      pressure = ((m_pressureInpt.getVoltage() - 0.5) / 4.0) * 200.0;
+      SmartDashboard.putNumber("Chamber Pressure", pressure);
   }
 
   public Command openChamberValve() {
@@ -39,7 +41,7 @@ public class Launcher extends SubsystemBase {
 
   public Command Shoot() {
       // load pressure into the shot chamber
-    return run(m_release::close)
+    return run(() -> m_release.set(false))
         .withTimeout(1.0)
         .andThen(run(() -> m_chamber.set(true))
             .withTimeout(3.0))
