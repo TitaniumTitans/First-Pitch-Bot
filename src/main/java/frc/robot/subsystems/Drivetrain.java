@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+import java.util.function.DoubleSupplier;
+
 public class Drivetrain extends SubsystemBase {
     private final WPI_TalonSRX m_flTalon = new WPI_TalonSRX(0);
     private final WPI_TalonSRX m_frTalon = new WPI_TalonSRX(1);
@@ -19,6 +21,7 @@ public class Drivetrain extends SubsystemBase {
         m_blTalon.follow(m_flTalon);
 
         m_flTalon.setInverted(true);
+        m_blTalon.setInverted(true);
 
         m_diffDrive = new DifferentialDrive(m_flTalon,m_frTalon);
     }
@@ -26,12 +29,15 @@ public class Drivetrain extends SubsystemBase {
     public void arcadeDrive(double xAxisSpeed, double zAxisRotate) {
         m_diffDrive.arcadeDrive(xAxisSpeed, zAxisRotate);
     }
-    public Command Drive(CommandXboxController controller) {
-        return runEnd(() -> {
-            double leftY = MathUtil.applyDeadband(controller.getLeftY(),0.1);
-            double rightX = MathUtil.applyDeadband(controller.getRightX(),0.1);
-            arcadeDrive(leftY, rightX);
-            },
-                () -> arcadeDrive(0.0,0.0));
+//    public Command Drive(CommandXboxController controller) {
+//        return run(() -> {
+//            double leftY = -controller.getLeftY();
+//            double rightX = controller.getRightX();
+//            arcadeDrive(leftY, rightX);
+//            });
+//    }
+
+    public Command Drive(DoubleSupplier xInput, DoubleSupplier zInput) {
+        return run(() -> arcadeDrive(xInput.getAsDouble(), zInput.getAsDouble()));
     }
 }

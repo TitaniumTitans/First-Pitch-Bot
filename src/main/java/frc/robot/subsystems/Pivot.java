@@ -13,20 +13,21 @@ public class Pivot extends SubsystemBase {
   private final double PIVOT_GEAR_RATIO = 1.0;
 
   private final TalonSRX m_pivot = new TalonSRX(5);
-  private final double minPivotAngle = -45.0;
-  private final double maxPivotAngle = 45.0;
+  private final double minPivotAngle = -200.0;
+  private final double maxPivotAngle = 2870.0;
 
   public Pivot() {
-    m_pivot.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.RemoteSensor0, 0, 10);
+    m_pivot.setInverted(true);
+    m_pivot.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder, 0, 10);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Pivot Position", m_pivot.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Pivot Position", -m_pivot.getSelectedSensorPosition());
   }
 
   public void runMotor(double speed) {
-    double angle = m_pivot.getSelectedSensorPosition() * ENCODER_COUNTS_PER_REVOLUTION * PIVOT_GEAR_RATIO;
+    double angle = -m_pivot.getSelectedSensorPosition() * ENCODER_COUNTS_PER_REVOLUTION * PIVOT_GEAR_RATIO;
 
     if (angle < minPivotAngle && speed < 0) {
       speed = 0.;

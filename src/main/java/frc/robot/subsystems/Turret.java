@@ -13,23 +13,23 @@ public class Turret extends SubsystemBase {
   private final double TURRET_GEAR_RATIO = 1.0;
 
   private final TalonSRX m_turret = new TalonSRX(4);
-  private final double minTurretAngle = -45.0;
-  private final double maxTurretAngle = 45.0;
+  private final double minTurretAngle = -1000.0;
+  private final double maxTurretAngle = 1000.0;
 
   public Turret() {
-    m_turret.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.RemoteSensor0, 0, 10);
+    m_turret.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder, 0, 10);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Turret Position", m_turret.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Turret Position", m_turret.getSelectedSensorPosition() * ENCODER_COUNTS_PER_REVOLUTION * TURRET_GEAR_RATIO);
   }
 
   public void runMotor(double speed) {
     double angle = m_turret.getSelectedSensorPosition() * ENCODER_COUNTS_PER_REVOLUTION * TURRET_GEAR_RATIO;
 
     if (angle < minTurretAngle && speed < 0) {
-      speed = 0.;
+      speed = 0;
     } else if (angle > maxTurretAngle && speed > 0) {
       speed = 0;
     }
