@@ -18,7 +18,7 @@ import frc.robot.subsystems.Turret;
 public class RobotContainer {
     CommandXboxController m_controller = new CommandXboxController(0);
     Drivetrain m_drivetrain = new Drivetrain();
-//    Launcher m_launcher = new Launcher();
+    Launcher m_launcher = new Launcher();
 
     Pivot m_pivot = new Pivot();
     Turret m_turret = new Turret();
@@ -35,7 +35,11 @@ public class RobotContainer {
                         () -> MathUtil.applyDeadband(m_controller.getRightX(), 0.1)
                 )
         );
-//        m_controller.a().whileTrue(m_launcher.Shoot(true));
+
+//        m_controller.a().whileTrue(m_launcher.Shoot());
+
+        m_controller.a().whileTrue(m_launcher.openChamberValve());
+        m_controller.b().whileTrue(m_launcher.openShotValve());
 
         m_controller.leftTrigger().whileTrue(m_turret.runMotorFactory(0.4));
         m_controller.rightTrigger().whileTrue(m_turret.runMotorFactory(-0.4));
