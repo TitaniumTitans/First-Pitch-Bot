@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,7 +27,11 @@ public class Drivetrain extends SubsystemBase {
         m_diffDrive.arcadeDrive(xAxisSpeed, zAxisRotate);
     }
     public Command Drive(CommandXboxController controller) {
-        return runEnd(() -> arcadeDrive(-controller.getLeftY(), controller.getRightX()),
+        return runEnd(() -> {
+            double leftY = MathUtil.applyDeadband(controller.getLeftY(),0.1);
+            double rightX = MathUtil.applyDeadband(controller.getRightX(),0.1);
+            arcadeDrive(leftY, rightX);
+            },
                 () -> arcadeDrive(0.0,0.0));
     }
 }
