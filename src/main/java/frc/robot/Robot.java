@@ -32,12 +32,12 @@ public class Robot extends TimedRobot
                 // get usb camera
                 UsbCamera camera = CameraServer.startAutomaticCapture();
                 // set resolution
-                camera.setResolution(640, 480);
+                camera.setResolution(800, 600);
 
                 // sinks capture input
                 CvSink sink = CameraServer.getVideo();
                 // sources take video output
-                CvSource outputStream = CameraServer.putVideo("Aim", 640, 480);
+                CvSource outputStream = CameraServer.putVideo("Aim", 800, 600);
 
                 // mats are opencv frames. they're expensive so we'll reuse this one
                 Mat mat = new Mat();
@@ -50,12 +50,21 @@ public class Robot extends TimedRobot
                         continue;
                     }
 
+                    Imgproc.getRotationMatrix2D(
+                            new Point(400, 300),
+                            180,
+                            1.0
+                    );
+
                     Imgproc.circle(mat,
-                        new Point(640.0 / 2.0, 480.0 / 2.0),
-                        5,
-                        new Scalar(255));
+                            new Point(400.0, 300.0),
+                            20,
+                            new Scalar(255, 0, 0),
+                            5);
+
+                    outputStream.putFrame(mat);
                 }
-                outputStream.putFrame(mat);
+
             });
 
         visionThread.setDaemon(true);
