@@ -8,6 +8,7 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
@@ -42,6 +43,10 @@ public class RobotContainer {
                         () -> MathUtil.applyDeadband(m_controller.getLeftY(), 0.1),
                         () -> MathUtil.applyDeadband(m_controller.getRightX(), 0.1)
                 )
+        );
+
+        m_pivot.setDefaultCommand(
+                new RunCommand(() -> m_pivot.moveMotor(0.0))
         );
 
         m_controller.x().whileTrue(m_launcher.Shoot());
