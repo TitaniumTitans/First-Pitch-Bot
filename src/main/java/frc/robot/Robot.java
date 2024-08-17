@@ -5,19 +5,71 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 public class Robot extends TimedRobot
 {
     private Command autonomousCommand;
+    private Thread visionThread;
     
     private final RobotContainer robotContainer = new RobotContainer();
     
     
     @Override
-    public void robotInit() {}
+    public void robotInit() {
+        visionThread = new Thread(
+            () -> {
+                // get usb camera
+                UsbCamera camera = CameraServer.startAutomaticCapture();
+                // set resolution
+                camera.setResolution(800, 600);
+
+                // sinks capture input
+                CvSink sink = CameraServer.getVideo();
+                // sources take video output
+                CvSource outputStream = CameraServer.putVideo("Aim", 800, 600);
+
+                // mats are opencv frames. they're expensive so we'll reuse this one
+                Mat mat = new Mat();
+
+                // this can't be true
+                while(!Thread.interrupted()) {
+                    // grab the image from the camera
+                    if (sink.grabFrame(mat) == 0) {
+                        outputStream.notifyError(sink.getError());
+                        continue;
+                    }
+
+                    Imgproc.getRotationMatrix2D(
+                            new Point(400, 300),
+                            180,
+                            1.0
+                    );
+
+                    Imgproc.circle(mat,
+                            new Point(400.0, 300.0),
+                            20,
+                            new Scalar(255, 0, 0),
+                            5);
+
+                    outputStream.putFrame(mat);
+                }
+
+            });
+
+        visionThread.setDaemon(true);
+        visionThread.start();
+    }
     
     
     @Override
