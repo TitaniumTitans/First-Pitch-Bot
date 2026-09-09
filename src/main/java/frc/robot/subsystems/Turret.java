@@ -22,11 +22,11 @@ public class Turret extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Turret Position", m_turret.getSelectedSensorPosition() * ENCODER_COUNTS_PER_REVOLUTION * TURRET_GEAR_RATIO);
+    SmartDashboard.putNumber("Turret Position", m_turret.getSelectedSensorPosition());
   }
 
   public void runMotor(double speed) {
-    double angle = m_turret.getSelectedSensorPosition() * ENCODER_COUNTS_PER_REVOLUTION * TURRET_GEAR_RATIO;
+    double angle = m_turret.getSelectedSensorPosition();
 
     if (angle < minTurretAngle && speed < 0) {
       speed = 0;

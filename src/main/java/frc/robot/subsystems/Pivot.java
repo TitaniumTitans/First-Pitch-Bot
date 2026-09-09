@@ -18,7 +18,7 @@ public class Pivot extends SubsystemBase {
   private final WPI_TalonSRX m_pivot = new WPI_TalonSRX(5);
   private final double minPivotAngle = -200.0;
   private final double maxPivotAngle = 2870.0;
-  private final ArmFeedforward feedforward = new ArmFeedforward(0.0,0.5,0.0);
+  private final ArmFeedforward feedforward = new ArmFeedforward(0.0,0.75,0.0);
 
   public Pivot() {
     m_pivot.setInverted(true);
@@ -27,11 +27,11 @@ public class Pivot extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Pivot Position", -m_pivot.getSelectedSensorPosition() / ENCODER_COUNTS_PER_REVOLUTION / PIVOT_GEAR_RATIO);
+    SmartDashboard.putNumber("Pivot Position", -m_pivot.getSelectedSensorPosition());
   }
 
   public void runMotor(double speed) {
-    double angle = -m_pivot.getSelectedSensorPosition() / ENCODER_COUNTS_PER_REVOLUTION / PIVOT_GEAR_RATIO;
+    double angle = -m_pivot.getSelectedSensorPosition();
 
     if (angle < minPivotAngle && speed < 0) {
       speed = 0.;
@@ -43,7 +43,7 @@ public class Pivot extends SubsystemBase {
   }
 
   public void resetEncoder() {
-    m_pivot.setSelectedSensorPosition(0.0);
+    m_pivot.setSelectedSensorPosition(210);
   }
   public void moveMotor(double speed) {
     double output = feedforward.calculate(m_pivot.getSelectedSensorPosition()  / ENCODER_COUNTS_PER_REVOLUTION / PIVOT_GEAR_RATIO * Math.PI * 2.0, 0.0);

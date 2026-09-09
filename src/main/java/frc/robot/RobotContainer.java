@@ -46,7 +46,7 @@ public class RobotContainer {
         );
 
         m_pivot.setDefaultCommand(
-                new RunCommand(() -> m_pivot.moveMotor(0.0))
+                new RunCommand(() -> m_pivot.moveMotor(0.0), m_pivot)
         );
 
         m_controller.x().whileTrue(m_launcher.Shoot());
